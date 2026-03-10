@@ -43,12 +43,12 @@ def create_commendation(schoolkid: Schoolkid, subject: Subject):
         group_letter=schoolkid.group_letter,
         )
     qs_lessons_by_subject = qs_lessons.filter(subject=subject)
-    first_lesson = choice(qs_lessons_by_subject)
-    teacher = Teacher.objects.get(full_name=first_lesson.teacher)
+    random_lesson = choice(qs_lessons_by_subject)
+    teacher = Teacher.objects.get(full_name=random_lesson.teacher)
 
     new_commendation = Commendation.objects.create(
         text=choice(commendations),
-        created=first_lesson.date,
+        created=random_lesson.date,
         schoolkid=schoolkid,
         subject=subject,
         teacher=teacher,
