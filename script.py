@@ -9,6 +9,19 @@ from datacenter.models import Subject
 from datacenter.models import Teacher
 
 
+COMMENDATIONS = [
+    'Молодец!',
+    'Отлично!',
+    'Хорошо!',
+    'Гораздо лучше, чем я ожидал!',
+    'Ты меня приятно удивил!',
+    'Великолепно!',
+    'Прекрасно!',
+    'Ты меня очень обрадовал!',
+    'Именно этого я давно ждал от тебя!',
+    'Сказано здорово – просто и ясно!',
+]
+
 def fix_marks(schoolkid: Schoolkid) -> None:
     """Corrects the bad grades of a given schoolkid."""
     qs_bad_points_child = Mark.objects.filter(schoolkid=schoolkid, points__lt=4)
@@ -26,18 +39,6 @@ def remove_chastisements(schoolkid: Schoolkid) -> None:
 
 def create_commendation(schoolkid: Schoolkid, subject: Subject):
     """Creates commendation for a given student in a lesson on a given subject."""
-    commendations = [
-        'Молодец!',
-        'Отлично!',
-        'Хорошо!',
-        'Гораздо лучше, чем я ожидал!',
-        'Ты меня приятно удивил!',
-        'Великолепно!',
-        'Прекрасно!',
-        'Ты меня очень обрадовал!',
-        'Именно этого я давно ждал от тебя!',
-        'Сказано здорово – просто и ясно!',
-    ]
     qs_lessons = Lesson.objects.filter(
         year_of_study=schoolkid.year_of_study,
         group_letter=schoolkid.group_letter,
@@ -47,7 +48,7 @@ def create_commendation(schoolkid: Schoolkid, subject: Subject):
     teacher = Teacher.objects.get(full_name=random_lesson.teacher)
 
     new_commendation = Commendation.objects.create(
-        text=choice(commendations),
+        text=choice(COMMENDATIONS),
         created=random_lesson.date,
         schoolkid=schoolkid,
         subject=subject,
