@@ -58,17 +58,29 @@ def create_commendation(schoolkid: Schoolkid, subject: Subject):
         )
     
 
-def get_schoolkid_by_filter(schoolkid_filter: str) -> Schoolkid:
-    """Returns the schoolkid by the filter"""
-    return Schoolkid.objects.filter(full_name__contains=schoolkid_filter).get()
+def get_schoolkid_by_filter(schoolkid_filter: str) -> Optional[Schoolkid]:
+    """Returns the schoolkid by the filter or None"""
+    qs_schoolkid_by_filter = Schoolkid.objects.filter(full_name__contains=schoolkid_filter)
+    try:
+        return qs_schoolkid_by_filter.get()
+    except Schoolkid.DoesNotExist:
+        return
 
 
-def get_schoolkid_subject_by_filter(schoolkid: Schoolkid, subject_filter: str) -> Subject:
-    """Returns the subject by schoolkid and filter"""
-    return Subject.objects.filter(
+
+def get_schoolkid_subject_by_filter(
+        schoolkid: Schoolkid,
+        subject_filter: str
+        ) -> Optional[Subject]:
+    """Returns the subject by schoolkid and filter or None"""
+    qs_schoolkid_subject_by_filter =  Subject.objects.filter(
                 title=subject_filter,
                 year_of_study=schoolkid.year_of_study
-                ).get()
+                )
+    try:
+        return qs_schoolkid_subject_by_filter.get()
+    except Subject.DoesNotExist:
+        return
 
 
 def main(schoolkid_input: str, subject_input: str = None):
