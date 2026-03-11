@@ -84,25 +84,19 @@ def get_schoolkid_subject_by_filter(
 
 
 def main(schoolkid_input: str, subject_input: str = None):
-    try:
-        schoolkid = get_schoolkid_by_filter(schoolkid_input)
-        fix_marks(schoolkid)
-        remove_chastisements(schoolkid)
-    except Schoolkid.MultipleObjectsReturned:
-        print('Найдено более одного ученика. Уточните свой запрос.')
+    if not schoolkid_input:
         return
-    except Schoolkid.DoesNotExist:
-        print(f'По запросу "{schoolkid_input}" не найдено совпадений.')
+    
+    schoolkid = get_schoolkid_by_filter(schoolkid_input)
+    if schoolkid is None:
         return
+    
+    fix_marks(schoolkid)
+    remove_chastisements(schoolkid)
 
-    if schoolkid and subject_input:
-        try:
-            subject = get_schoolkid_subject_by_filter(schoolkid, subject_input)
-            create_commendation(schoolkid, subject)
-        except Subject.MultipleObjectsReturned:
-            print('Найдено более одного предмета. Уточните свой запрос.')
+    if subject_input:
+        subject = get_schoolkid_subject_by_filter(schoolkid, subject_input)
+        if subject is None:
             return
-        except Subject.DoesNotExist:
-            print(f'По запросу "Ученик: {schoolkid_input} | Предмет: {subject_input}" '
-                  f'не найдено совпадений.')
-            return
+        
+        create_commendation(schoolkid, subject)
