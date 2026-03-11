@@ -24,17 +24,17 @@ COMMENDATIONS = [
 
 def fix_marks(schoolkid: Schoolkid) -> None:
     """Corrects the bad grades of a given schoolkid."""
-    qs_bad_points_child = Mark.objects.filter(schoolkid=schoolkid, points__lt=4)
-    for bad_point in qs_bad_points_child:
-        bad_point.points = 5
-        bad_point.save()
+    qs_bad_points_child = Mark.objects.filter(
+        schoolkid=schoolkid,
+        points__lt=4
+        ).update(points=5)
 
 
 def remove_chastisements(schoolkid: Schoolkid) -> None:
     """Deletes the chastisements of a given schoolkid. """
-    qs_chastisements_child = Chastisement.objects.filter(schoolkid=schoolkid)
-    for chast in qs_chastisements_child:
-        chast.delete()
+    qs_chastisements_child = Chastisement.objects.filter(
+        schoolkid=schoolkid
+        ).delete()
 
 
 def create_commendation(schoolkid: Schoolkid, subject: Subject):
