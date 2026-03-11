@@ -45,6 +45,8 @@ def create_commendation(schoolkid: Schoolkid, subject: Subject):
         )
     qs_lessons_by_subject = qs_lessons.filter(subject=subject)
     last_lesson = qs_lessons_by_subject.order_by('-date').first()
+    if last_lesson is None:
+        return
     teacher = Teacher.objects.get(full_name=last_lesson.teacher)
 
     new_commendation = Commendation.objects.create(
