@@ -39,14 +39,15 @@ def remove_chastisements(schoolkid: Schoolkid) -> None:
 
 def create_commendation(schoolkid: Schoolkid, subject: Subject):
     """Creates commendation for a given student in a lesson on a given subject."""
-    qs_lessons = Lesson.objects.filter(
+    last_lesson = Lesson.objects.filter(
         year_of_study=schoolkid.year_of_study,
         group_letter=schoolkid.group_letter,
-        )
-    qs_lessons_by_subject = qs_lessons.filter(subject=subject)
-    last_lesson = qs_lessons_by_subject.order_by('-date').first()
+        subject=subject
+        ).order_by('-date').first()
+    
     if last_lesson is None:
         return
+    
     teacher = Teacher.objects.get(full_name=last_lesson.teacher)
 
     new_commendation = Commendation.objects.create(
