@@ -60,12 +60,12 @@ def create_commendation(schoolkid: Schoolkid, subject: Subject):
 
 def get_schoolkid_by_filter(schoolkid_filter: str) -> Optional[Schoolkid]:
     """Returns the schoolkid by the filter or None"""
-    qs_schoolkid_by_filter = Schoolkid.objects.filter(full_name__contains=schoolkid_filter)
     try:
-        return qs_schoolkid_by_filter.get()
+        return Schoolkid.objects.get(full_name__contains=schoolkid_filter)
     except Schoolkid.DoesNotExist:
         return
-
+    except Schoolkid.MultipleObjectsReturned:
+        return
 
 
 def get_schoolkid_subject_by_filter(
@@ -73,13 +73,14 @@ def get_schoolkid_subject_by_filter(
         subject_filter: str
         ) -> Optional[Subject]:
     """Returns the subject by schoolkid and filter or None"""
-    qs_schoolkid_subject_by_filter =  Subject.objects.filter(
-                title=subject_filter,
-                year_of_study=schoolkid.year_of_study
-                )
     try:
-        return qs_schoolkid_subject_by_filter.get()
+        return Subject.objects.get(
+            title=subject_filter,
+            year_of_study=schoolkid.year_of_study
+            )
     except Subject.DoesNotExist:
+        return
+    except Subject.MultipleObjectsReturned:
         return
 
 
